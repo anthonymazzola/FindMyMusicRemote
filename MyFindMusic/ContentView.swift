@@ -33,9 +33,17 @@ struct MapView: View {
 }
 
 struct ProfileView: View {
+    let profileLinkNames: [String] = ["Saved Articles", "Folowers", "Following"]
     var body: some View {
         Text("Profile View")
         // Implement your profile view here
+        VStack {
+            ForEach(profileLinkNames, id: \.self) { profileLinkName in
+                Text(profileLinkName)
+                .font(.body)
+            }
+        }
+        .navigationBarTitle("Anthony Mazzola")
     }
 }
 
