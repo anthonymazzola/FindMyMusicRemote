@@ -33,17 +33,48 @@ struct MapView: View {
 }
 
 struct ProfileView: View {
-    let profileLinkNames: [String] = ["Saved Articles", "Folowers", "Following"]
+    let userName: String = "Person Name"
+    
     var body: some View {
-        Text("Profile View")
-        // Implement your profile view here
-        VStack {
-            ForEach(profileLinkNames, id: \.self) { profileLinkName in
-                Text(profileLinkName)
-                .font(.body)
+        NavigationView {
+            VStack {
+                Spacer()
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.blue)
+                Text(userName)
+                    .font(.title)
+                    .padding()
+                Spacer()
+                
+                VStack {
+                    Button(action: {
+                        
+                    }) {
+                        Text("Connect to Spotify")
+                            .font(.body)
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
+                    
+                    Button(action: {
+                        
+                    }) {
+                        Text("Connect to Apple Music")
+                            .font(.body)
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
+                }
+                
+                Spacer()
             }
+            .navigationBarTitle("Profile")
         }
-        .navigationBarTitle("Anthony Mazzola")
     }
 }
 
@@ -77,9 +108,8 @@ struct TabViewDemo: View {
 }
 
 
-#Preview {
-//    ContentView()
-    TabViewDemo()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        TabViewDemo()
+    }
 }
-
-
