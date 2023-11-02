@@ -7,6 +7,8 @@
 
 import SwiftUI
 import MapKit
+import CoreLocation
+import CoreLocationUI
 
 struct ContentView: View {
     var body: some View {
@@ -62,28 +64,65 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+//        guard let lastestLocation = locations.first else {
+//            // error handle
+//            return
+//        }
+//  
+//        self.region = MKCoordinateRegion(
+//            center: lastestLocation.coordinate,
+//            span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+//        )
+        
         locationManager.stopUpdatingLocation()
         locations.last.map {
-            region = MKCoordinateRegion(
+            self.region = MKCoordinateRegion(
                 center: $0.coordinate,
                 span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
             )
         }
     }
+    
+    func requestLocationForButton() {
+        locationManager.requestLocation()
+    }
+    
 }
 
+
 struct MapView: View {
-//    @State var region = MKCoordinateRegion(
-//        center: .init(latitude: 37.334_900,longitude: -122.009_020),
-//        span: .init(latitudeDelta: 0.2, longitudeDelta: 0.2)
-//    )
     @State var manager = LocationManager()
         
     var body: some View {
-//        Map(coordinateRegion: $region)
-//            .edgesIgnoringSafeArea(.all)
-        Map(coordinateRegion: $manager.region, showsUserLocation: true)
-                    .edgesIgnoringSafeArea(.all)
+        NavigationView{
+            ZStack(alignment: .topTrailing) {
+                Map(coordinateRegion: $manager.region, showsUserLocation: true)
+                            .edgesIgnoringSafeArea(.all)
+                
+//                Button(action: {
+//                    // Center the map
+//                    manager.requestLocationForButton()
+//                    
+//                }) {
+//                    Image(systemName: "location.square")
+//                        .imageScale(.large)
+//                        .font(.system(size: 30))
+//                }
+                
+                LocationButton(.currentLocation) {
+                  // Fetch location with Core Location.
+                    print("button pressed")
+                    manager.requestLocationForButton()
+                }
+                .symbolVariant(.fill)
+                .labelStyle(.iconOnly)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding()
+            }
+            
+        }
     }
 }
 
