@@ -173,37 +173,56 @@ struct ProfileView: View {
 }
 
 struct SearchFriends: View {
+    @State private var searchText: String = ""
+    let profiles = ["Jimmy": Image(systemName: "person"), "Mom": Image(systemName: "person"), "Sally": Image(systemName: "person"), "Carl": Image(systemName: "person")]
     var body: some View {
-        Text("Friend View")
-        // Implement your profile view here
-    }
-}
-
-struct TabViewDemo: View {
-    init(){
-        UITabBar.appearance().backgroundColor = UIColor.systemBackground
-    }
-    var body: some View {
-        TabView() {
-            MapView()
-                .tabItem() {
-                    Image(systemName: "map")
+        
+        VStack{
+            
+            Text("Friends")
+                .font(.title)
+                .padding()
+            TextField("Search Here", text: self.$searchText)
+                .padding(10)
+                .background(Color(.systemGray5))
+                .cornerRadius(20)
+                .padding(.horizontal, 20)
+            Spacer()
+            VStack{
+                List(Array(profiles), id: \.key) { key, value in
+                    Text("\(key): \(value)")
+                    }
                 }
-            SearchFriends()
-                .tabItem() {
-                    Image(systemName: "figure.2.arms.open")
-                }
-            ProfileView()
-                .tabItem() {
-                    Image(systemName: "person")
-                }
+            }
         }
     }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabViewDemo()
+    
+    struct TabViewDemo: View {
+        init(){
+            UITabBar.appearance().backgroundColor = UIColor.systemBackground
+        }
+        var body: some View {
+            TabView() {
+                MapView()
+                    .tabItem() {
+                        Image(systemName: "map")
+                    }
+                SearchFriends()
+                    .tabItem() {
+                        Image(systemName: "figure.2.arms.open")
+                    }
+                ProfileView()
+                    .tabItem() {
+                        Image(systemName: "person")
+                    }
+            }
+        }
     }
-}
+    
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            TabViewDemo()
+        }
+    }
+
