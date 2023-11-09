@@ -40,6 +40,7 @@
 		020A1A062AFAA08100C6FC9D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 020A1A052AFAA08100C6FC9D /* FirebaseStorage */; };
 		020A1A082AFAA08100C6FC9D /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 020A1A072AFAA08100C6FC9D /* FirebaseStorageCombine-Community */; };
 		020A1A0E2AFB198D00C6FC9D /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A0D2AFB198D00C6FC9D /* AuthViewModel.swift */; };
+		020A1A112AFD33EE00C6FC9D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A102AFD33EE00C6FC9D /* FriendsView.swift */; };
 		029CFC7F2AE437E100F32BEB /* MyFindMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */; };
 		029CFC812AE437E100F32BEB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC802AE437E100F32BEB /* ContentView.swift */; };
 		029CFC832AE437E300F32BEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 029CFC822AE437E300F32BEB /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 		020A19CE2AFA992600C6FC9D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		020A19D02AFA9E8700C6FC9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		020A1A0D2AFB198D00C6FC9D /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		020A1A102AFD33EE00C6FC9D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		029CFC7B2AE437E100F32BEB /* MyFindMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFindMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFindMusicApp.swift; sourceTree = "<group>"; };
 		029CFC802AE437E100F32BEB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -119,6 +121,30 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		020A1A0F2AFD33DB00C6FC9D /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				020A1A132AFD369700C6FC9D /* ViewModel */,
+				020A1A122AFD368100C6FC9D /* View */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		020A1A122AFD368100C6FC9D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				020A1A102AFD33EE00C6FC9D /* FriendsView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		020A1A132AFD369700C6FC9D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		029CFC722AE437E100F32BEB = {
 			isa = PBXGroup;
 			children = (
@@ -177,6 +203,7 @@
 		02CE3A892AF3EE8200077201 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				020A1A0F2AFD33DB00C6FC9D /* Friends */,
 				02CE3A8C2AF3EEEE00077201 /* Authentication */,
 				02CE3A8D2AF3EF0500077201 /* Profile */,
 				02CE3A8B2AF3EEB200077201 /* Root */,
@@ -320,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				020A1A112AFD33EE00C6FC9D /* FriendsView.swift in Sources */,
 				02CE3A8F2AF3EFC400077201 /* LoginView.swift in Sources */,
 				02CE3A912AF3F24E00077201 /* InputView.swift in Sources */,
 				029CFC812AE437E100F32BEB /* ContentView.swift in Sources */,

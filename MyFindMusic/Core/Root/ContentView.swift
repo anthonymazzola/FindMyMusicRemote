@@ -201,30 +201,30 @@ struct MapView: View {
 //    }
 //}
 //
-struct FriendsView: View {
-    @State private var searchText: String = ""
-    let profiles = ["Jimmy": Image(systemName: "person"), "Mom": Image(systemName: "person"), "Sally": Image(systemName: "person"), "Carl": Image(systemName: "person")]
-    var body: some View {
-        
-        VStack{
-            
-            Text("Friends")
-                .font(.title)
-                .padding()
-            TextField("Search Here", text: self.$searchText)
-                .padding(10)
-                .background(Color(.systemGray5))
-                .cornerRadius(20)
-                .padding(.horizontal, 20)
-            Spacer()
-            VStack{
-                List(Array(profiles), id: \.key) { key, value in
-                    Text("\(key): \(value)")
-                    }
-                }
-            }
-        }
-    }
+//struct FriendsView: View {
+//    @State private var searchText: String = ""
+//    let profiles = ["Jimmy": Image(systemName: "person"), "Mom": Image(systemName: "person"), "Sally": Image(systemName: "person"), "Carl": Image(systemName: "person")]
+//    var body: some View {
+//        
+//        VStack{
+//            
+//            Text("Friends")
+//                .font(.title)
+//                .padding()
+//            TextField("Search Here", text: self.$searchText)
+//                .padding(10)
+//                .background(Color(.systemGray5))
+//                .cornerRadius(20)
+//                .padding(.horizontal, 20)
+//            Spacer()
+//            VStack{
+//                List(Array(profiles), id: \.key) { key, value in
+//                    Text("\(key): \(value)")
+//                    }
+//                }
+//            }
+//        }
+//    }
 //    
 //    struct TabViewDemo: View {
 //        init(){
