@@ -57,8 +57,11 @@ class AuthViewModel: ObservableObject {
     }
     
     func deleteAccount() {
-        
+        Auth.auth().currentUser?.delete()
+        self.userSession = nil
+        self.currentUser = nil
     }
+    
     
     func fetchUser() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }

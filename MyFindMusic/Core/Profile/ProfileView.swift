@@ -51,10 +51,10 @@ struct ProfileView: View {
                                         tintColor: Color(.red))
                     }
                     Button {
-                        print("Sign Out")
+                        viewModel.deleteAccount()
                     } label: {
                         SettingsRowView(imageName: "xmark.circle.fill",
-                                        title: "Sign Out",
+                                        title: "Delete Account",
                                         tintColor: Color(.red))
                     }
                     
