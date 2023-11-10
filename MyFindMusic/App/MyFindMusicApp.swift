@@ -11,14 +11,16 @@ import Firebase
 @main
 struct MyFindMusicApp: App {
     @StateObject var viewModel = AuthViewModel()
+    var locationManager: LocationManager
     
     init() {
         FirebaseApp.configure()
+        locationManager = LocationManager()
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(locationManager: locationManager)
                 .environmentObject(viewModel)
         }
     }

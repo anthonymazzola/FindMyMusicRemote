@@ -10,15 +10,32 @@ import SwiftUI
 struct FriendsView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
-    
+    @State var searchText: String = ""
     var body: some View {
         let user = viewModel.currentUser
+        let friends = ["James", "Elijah", "Anthony"]
         
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    
+        VStack{
+        
+                    Text("Friends")
+                        .font(.title)
+                        .padding()
+                    TextField("Search Here", text: self.$searchText)
+                        .padding(10)
+                        .background(Color(.systemGray5))
+                        .cornerRadius(20)
+                        .padding(.horizontal, 20)
+                    Spacer()
+                    VStack{
+                        List(friends ?? ["Cant load"], id: \.self){ friend in
+                            Button(action: {
+                                                }) {
+                                                    Text(friend)
+                                                        .font(.body)
+                                                        .foregroundColor(.blue)
+                                                }
+                            }
+                        }
+                    }
     }
-}
-
-#Preview {
-    FriendsView()
 }

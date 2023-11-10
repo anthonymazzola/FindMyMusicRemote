@@ -41,6 +41,9 @@
 		020A1A082AFAA08100C6FC9D /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 020A1A072AFAA08100C6FC9D /* FirebaseStorageCombine-Community */; };
 		020A1A0E2AFB198D00C6FC9D /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A0D2AFB198D00C6FC9D /* AuthViewModel.swift */; };
 		020A1A112AFD33EE00C6FC9D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A102AFD33EE00C6FC9D /* FriendsView.swift */; };
+		020A1A152AFD3EAC00C6FC9D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A142AFD3EAC00C6FC9D /* FriendsViewModel.swift */; };
+		020A1A182AFE9A2700C6FC9D /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A172AFE9A2700C6FC9D /* MapView.swift */; };
+		020A1A1C2AFE9A5000C6FC9D /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A1B2AFE9A5000C6FC9D /* MapViewModel.swift */; };
 		029CFC7F2AE437E100F32BEB /* MyFindMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */; };
 		029CFC812AE437E100F32BEB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC802AE437E100F32BEB /* ContentView.swift */; };
 		029CFC832AE437E300F32BEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 029CFC822AE437E300F32BEB /* Assets.xcassets */; };
@@ -57,6 +60,9 @@
 		020A19D02AFA9E8700C6FC9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		020A1A0D2AFB198D00C6FC9D /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		020A1A102AFD33EE00C6FC9D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
+		020A1A142AFD3EAC00C6FC9D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
+		020A1A172AFE9A2700C6FC9D /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		020A1A1B2AFE9A5000C6FC9D /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		029CFC7B2AE437E100F32BEB /* MyFindMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFindMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFindMusicApp.swift; sourceTree = "<group>"; };
 		029CFC802AE437E100F32BEB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -141,8 +147,18 @@
 		020A1A132AFD369700C6FC9D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				020A1A142AFD3EAC00C6FC9D /* FriendsViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		020A1A162AFE9A0A00C6FC9D /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				020A1A172AFE9A2700C6FC9D /* MapView.swift */,
+				020A1A1B2AFE9A5000C6FC9D /* MapViewModel.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		029CFC722AE437E100F32BEB = {
@@ -203,6 +219,7 @@
 		02CE3A892AF3EE8200077201 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				020A1A162AFE9A0A00C6FC9D /* Map */,
 				020A1A0F2AFD33DB00C6FC9D /* Friends */,
 				02CE3A8C2AF3EEEE00077201 /* Authentication */,
 				02CE3A8D2AF3EF0500077201 /* Profile */,
@@ -348,7 +365,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				020A1A112AFD33EE00C6FC9D /* FriendsView.swift in Sources */,
+				020A1A182AFE9A2700C6FC9D /* MapView.swift in Sources */,
 				02CE3A8F2AF3EFC400077201 /* LoginView.swift in Sources */,
+				020A1A152AFD3EAC00C6FC9D /* FriendsViewModel.swift in Sources */,
+				020A1A1C2AFE9A5000C6FC9D /* MapViewModel.swift in Sources */,
 				02CE3A912AF3F24E00077201 /* InputView.swift in Sources */,
 				029CFC812AE437E100F32BEB /* ContentView.swift in Sources */,
 				029CFC7F2AE437E100F32BEB /* MyFindMusicApp.swift in Sources */,
