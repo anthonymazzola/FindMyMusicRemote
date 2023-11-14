@@ -13,10 +13,10 @@ struct FriendsView: View {
     @State var searchText: String = ""
     var body: some View {
         let user = viewModel.currentUser
-        let friends = ["James", "Elijah", "Anthony"]
-        
+
+
         VStack{
-        
+
                     Text("Friends")
                         .font(.title)
                         .padding()
@@ -27,7 +27,7 @@ struct FriendsView: View {
                         .padding(.horizontal, 20)
                     Spacer()
                     VStack{
-                        List(friends ?? ["Cant load"], id: \.self){ friend in
+                        List(user?.friends ?? ["Cant load"], id: \.self){ friend in
                             Button(action: {
                                                 }) {
                                                     Text(friend)
