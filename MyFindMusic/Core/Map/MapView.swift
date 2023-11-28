@@ -10,10 +10,13 @@ import _MapKit_SwiftUI
 
 struct MapView: View {
     @ObservedObject var manager: LocationManager
+
+    @EnvironmentObject var viewModel: AuthViewModel
     @State var size : CGFloat = UIScreen.main.bounds.height - 260
     let startPos: CGFloat = 195
 
     var body: some View {
+        let user = viewModel.currentUser
         NavigationView{
 
             ZStack(alignment: .topTrailing) {
@@ -24,6 +27,7 @@ struct MapView: View {
 
                 Button(action: {
                     // Center the map
+                    print(user?.friends)
                     manager.requestLocationForButton()
                 }) {
                     Image(systemName: "location.square")
@@ -84,47 +88,7 @@ struct MapView: View {
 //    MapView(manager: locationManager)
 //}
 
-struct swipe : View {
-//    @EnvironmentObject var authViewModel: AuthViewModel
-//    let user = authViewModel.currentUser
-    let friends = ["James", "Elijah", "Anthony"]
 
-    var body : some View{
-        VStack{
-            // for pushing view up / down
-            VStack{
-                //top+ bottom 30 so aprox height - 100
-                Text("Friends").fontWeight(.heavy).padding([.top,.bottom],15).padding(.leading, -150)
-            }
-            // Fill in list of friends here
-            VStack{
-                List(friends ?? ["Cant load"], id: \.self){ friend in
-                    Button(action: {
-                        // Center on that friend location
-                        print(friend)
-                                        }) {
-                                            ZStack{
-                                                Text(friend)
-                                                    .font(.body)
-                                                    .foregroundColor(.black)
-    //                                                .padding(.leading)
-
-                                            }
-                                            Text("Burlington, VT") //would be a get location call here or spotify call
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-//                                                .padding(.leading)
-
-                                        }
-                                        .padding(.leading, -160)
-                                        .frame(maxWidth: .infinity)
-                                        .buttonStyle(.borderless)
-                                        .foregroundColor(.green)
-                    }
-            }
-        }.background(Color.white)
-    }
-}
 
 
 //                LocationButton(.currentLocation) {
