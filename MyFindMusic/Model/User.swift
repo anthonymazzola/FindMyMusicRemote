@@ -23,6 +23,7 @@ struct User: Identifiable, Codable, Hashable {
         return ""
 
     }
+
 }
 
 //extension User {
