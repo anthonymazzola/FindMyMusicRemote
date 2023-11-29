@@ -12,84 +12,80 @@ struct swipe : View {
     @EnvironmentObject var viewModel: AuthViewModel
 //    let friends = ["James", "Elijah", "Anthony"]
 
-    @State var friendNames: [String] = []
+    @State var friendNames: [User] = []
 
     var body : some View{
-        let user = viewModel.currentUser
-
-        VStack{
-            // for pushing view up / down
+        if let user = viewModel.currentUser {
             VStack{
-                //top+ bottom 30 so aprox height - 100
-                Text("Friends").fontWeight(.heavy).padding([.top,.bottom],15).padding(.leading, -150)
-            }
-            // Fill in list of friends here
-//            VStack{
-//                List(friends ?? ["Cant load"], id: \.self){ friend in
-//                    Button(action: {
-//                        // Center on that friend location
-//                        print(friend)
-//                                        }) {
-//                                            ZStack{
-//                                                Text(friend)
-//                                                    .font(.body)
-//                                                    .foregroundColor(.black)
-//    //                                                .padding(.leading)
-//
-//                                            }
-//                                            Text("Burlington, VT") //would be a get location call here or spotify call
-//                                                .font(.caption)
-//                                                .foregroundColor(.gray)
-////                                                .padding(.leading)
-//
-//                                        }
-//                                        .padding(.leading, -160)
-//                                        .frame(maxWidth: .infinity)
-//                                        .buttonStyle(.borderless)
-//                                        .foregroundColor(.green)
-//                    }
-//            }
-            VStack{
-
-                Spacer()
+                // for pushing view up / down
                 VStack{
-                    List(friendNames, id: \.self) { friendName in
-                                Button(action: {
-                                    // Fetch the friend's full name asynchronously
-                                    print(friendName)
-                                }) {
-                                        Text(friendName)
+                    //top+ bottom 30 so aprox height - 100
+                    Text("Friends").fontWeight(.heavy).padding([.top,.bottom],15).padding(.leading, -150)
+                }
+                VStack{
 
-                                    }
-                                }
-                            }
-                }
-            .padding(.leading, -160)
-            .frame(maxWidth: .infinity)
-            .buttonStyle(.borderless)
-            .foregroundColor(.green)
-                .onAppear {
-                    var _ = fetchFriendFullName(uid: user!.friends)
-                }
-        }.background(Color.white)
+
+                    VStack{
+                        List(friendNames, id: \.self) { friend in
+                            NavigationLink(destination: FriendProfileView(friend: friend)) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text(friend.initials)
+                                            .font(.title)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.white)
+                                            .frame(width: 72, height: 72)
+                                            .background(Color(.systemGray3))
+                                            .clipShape(Circle())
+
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(friend.fullname)
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                                .padding(.top, 4)
+
+                                            Text(friend.email)
+                                                .font(.footnote)
+                                                .foregroundColor(.gray)
+                                        } // VStack
+                                        Spacer()
+                                    } // HStack
+                                } // VStack
+                            } // NavigationLink
+                        } // List
+                    } // VStack
+
+
+                } // VStack
+                .padding(.leading, -160)
+                .frame(maxWidth: .infinity)
+                .buttonStyle(.borderless)
+                .foregroundColor(.green)
+                    .onAppear {
+                        var _ = fetchFriendFullName(uid: user.friends)
+                    }
+            }.background(Color.white)
+        } else {
+            Text("Loading...")
+        }
+
+
     }
 
-    private func fetchFriendFullName(uid: [String]) -> [String] {
-        var theseFriendNames: [String] = []
+    private func fetchFriendFullName(uid: [String]) -> Int {
+        friendNames.removeAll()
+        let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"])
         Task {
             for thisId in uid{
                 if let friend = await fetchFriend(uid: thisId) {
-                    print(friend.fullname)
-                    theseFriendNames.append(friend.fullname)
-                    friendNames.append(friend.fullname)
+                    //print(friend.fullname)
+                    friendNames.append(friend)
                 }
                 else {
-                    friendNames.append("cant load")
+                    friendNames.append(FAILED_USER)
                 }
             }
-            print(theseFriendNames)
-
         }
-        return theseFriendNames
+        return 1
     }
 }
