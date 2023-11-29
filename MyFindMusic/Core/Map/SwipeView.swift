@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct swipe : View {
-//    let user = authViewModel.currentUser
     @EnvironmentObject var viewModel: AuthViewModel
-//    let friends = ["James", "Elijah", "Anthony"]
-
+    var locationManager: LocationManager
     @State var friendNames: [User] = []
 
     var body : some View{
@@ -22,12 +20,12 @@ struct swipe : View {
                     //top+ bottom 30 so aprox height - 100
                     Text("Friends").fontWeight(.heavy).padding([.top,.bottom],15).padding(.leading, -150)
                 }
-                VStack{
 
+                VStack{
 
                     VStack{
                         List(friendNames, id: \.self) { friend in
-                            NavigationLink(destination: FriendProfileView(friend: friend)) {
+                            NavigationLink(destination: MapView(manager: locationManager)) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     HStack {
                                         Text(friend.initials)
@@ -48,7 +46,6 @@ struct swipe : View {
                                                 .font(.footnote)
                                                 .foregroundColor(.gray)
                                         } // VStack
-                                        Spacer()
                                     } // HStack
                                 } // VStack
                             } // NavigationLink
@@ -57,7 +54,7 @@ struct swipe : View {
 
 
                 } // VStack
-                .padding(.leading, -160)
+                .padding(.leading, 0)
                 .frame(maxWidth: .infinity)
                 .buttonStyle(.borderless)
                 .foregroundColor(.green)
@@ -74,7 +71,7 @@ struct swipe : View {
 
     private func fetchFriendFullName(uid: [String]) -> Int {
         friendNames.removeAll()
-        let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"])
+        let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"], latitude: 0, longitude: 0)
         Task {
             for thisId in uid{
                 if let friend = await fetchFriend(uid: thisId) {

@@ -74,11 +74,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     func requestLocationForButton() {
-        // When button is pressed stop Updated location
-//        locationManager.stopUpdatingLocation()
-        // Start updating right away again
-//        locationManager.startUpdatingLocation()
-        print("follow")
         // Get the lastest location
         shouldCenterOnLocation = true
         guard let lastestLocation = locationManager.location else {
@@ -88,7 +83,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
         // set that coordinate to be the center of self.region
         self.region.center = lastestLocation.coordinate
-//        print(self.region.center)
+        print("coordinate")
+        print(self.region.center)
+        print(self.region.center.latitude)
+        print(self.region.center.longitude)
 //        locationManager.requestLocation()
 //        locationManager.startUpdatingLocation()
     }

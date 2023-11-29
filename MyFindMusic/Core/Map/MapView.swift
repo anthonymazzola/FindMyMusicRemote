@@ -27,7 +27,6 @@ struct MapView: View {
 
                 Button(action: {
                     // Center the map
-                    print(user?.friends)
                     manager.requestLocationForButton()
                 }) {
                     Image(systemName: "location.square")
@@ -36,7 +35,7 @@ struct MapView: View {
                 }
 
                 // Pull up menu
-                swipe().clipShape(
+                swipe(locationManager: LocationManager()).clipShape(
                     .rect(
                        topLeadingRadius: 20,
                        bottomLeadingRadius: 0,
@@ -44,7 +43,7 @@ struct MapView: View {
                        topTrailingRadius: 20
                     )
                 )
-                .padding(.bottom, 80)
+                .padding(.bottom, 15)
                 .offset(y: size)
                 .gesture(DragGesture()
                 .onChanged({ (value) in
