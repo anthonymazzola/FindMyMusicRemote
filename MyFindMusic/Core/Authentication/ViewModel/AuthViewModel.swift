@@ -9,11 +9,18 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+// import WebKit
+import SpotifyWebAPI
 
 @MainActor
 class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
+    @Published var spotify = SpotifyAPI(
+        authorizationManager: AuthorizationCodeFlowManager(
+            clientId: "7e6bd487f6084279982cbff6fc6865fc", clientSecret: "22b470637932483f9a99d5dfd3a8c276"
+        )
+    )
     
     init() {
         self.userSession = Auth.auth().currentUser
@@ -72,4 +79,41 @@ class AuthViewModel: ObservableObject {
         print("DEBUG: Current user is \(self.currentUser)")
     }
     
+    func authenticateWithSpotify() {
+        // Initialize SpotifyAPI with your client ID and client secret
+
+        // Create the Spotify authorization URL
+        let authorizationURL = spotify.authorizationManager.makeAuthorizationURL(
+            redirectURI: URL(string: "myfindmusic://spotify-login-callback")!,
+            showDialog: false,
+            scopes: [
+                .playlistModifyPrivate,
+                .userModifyPlaybackState,
+                .playlistReadCollaborative,
+                .userReadPlaybackPosition
+            ]
+        )!
+
+        // Open the Spotify authorization URL in the browser or web view
+        // Note: You may need to handle this differently depending on your SwiftUI architecture
+        UIApplication.shared.open(authorizationURL)
+
+    }
+
+//    func getAccessTokenFromWebView() {
+//        guard let urlRequest = APIService.shared.getAccessToken() else { return }
+//        let webview = WKWebView()
+//        
+//        webview.load(urlRequest)
+//        webview.navigationDelegate = self
+//        view = webview
+//        
+//    }
 }
+
+//extension AuthViewModel: WKNavigationDelegate {
+//    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+//        guard let urlString = webView.url?.absoluteString else { return }
+//        print(urlString)
+//    }
+//}
