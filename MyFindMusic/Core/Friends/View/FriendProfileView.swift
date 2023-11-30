@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FriendProfileView: View {
     var friend: User
+    let nameFont = Font.system(size: 30, weight: .semibold, design: .default)
     var body: some View {
         List {
             Section {
@@ -24,16 +25,14 @@ struct FriendProfileView: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(friend.fullname)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .padding(.top, 4)
+                            .font(nameFont)
 
-                        Text(friend.email)
-                            .font(.footnote)
-                            .foregroundColor(.gray)
                     }
 
                 }
+
+                Text("This will be where you see your current song")
+
             }
         }
     }
