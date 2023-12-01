@@ -18,7 +18,6 @@ struct FriendsView: View {
 
     var body: some View {
         let user = viewModel.currentUser
-
         VStack{
 
             Text("Friends")
@@ -61,7 +60,6 @@ struct FriendsView: View {
             }
             .onAppear {
                 var toRun = fetchFriendFullName(uid: user!.friends)
-                print(user?.email)
             }
         }
     }
@@ -69,7 +67,7 @@ struct FriendsView: View {
 
             private func fetchFriendFullName(uid: [String]) -> Int {
                 friendNames.removeAll()
-                let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"])
+                let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"], latitude: 0, longitude: 0)
                 Task {
                     for thisId in uid{
                         if let friend = await fetchFriend(uid: thisId) {
