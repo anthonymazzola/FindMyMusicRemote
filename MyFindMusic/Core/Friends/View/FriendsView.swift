@@ -14,6 +14,13 @@ struct FriendsView: View {
     @State var searchText: String = ""
     @State var friendNames: [User] = []
 
+    var filteredUsers: [User] {
+        if searchText.isEmpty {
+            return friendNames
+        } else {
+            return friendNames.filter { $0.fullname.lowercased().contains(searchText.lowercased()) }
+        }}
+
 
 
     var body: some View {
@@ -23,14 +30,14 @@ struct FriendsView: View {
             Text("Friends")
                 .font(.title)
                 .padding()
-            TextField("Search Here", text: self.$searchText)
-                .padding(10)
-                .background(Color(.systemGray5))
-                .cornerRadius(20)
-                .padding(.horizontal, 20)
-            Spacer()
+//            TextField("Search Here", text: self.$searchText)
+//                .padding(10)
+//                .background(Color(.systemGray5))
+//                .cornerRadius(20)
+//                .padding(.horizontal, 20)
+//            Spacer()
             NavigationStack{
-                List(friendNames, id: \.self) { friend in
+                List(filteredUsers, id: \.self) { friend in
                     NavigationLink(destination: FriendProfileView(friend: friend)) {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
@@ -56,7 +63,7 @@ struct FriendsView: View {
                         }
                     }
 
-                }
+                }.searchable(text: $searchText)
             }
             .onAppear {
                 var toRun = fetchFriendFullName(uid: user!.friends)
@@ -82,7 +89,6 @@ struct FriendsView: View {
                 return 1
             }
         }
-
 
 
 

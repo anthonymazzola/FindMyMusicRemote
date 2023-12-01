@@ -44,6 +44,10 @@
 		020A1A152AFD3EAC00C6FC9D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A142AFD3EAC00C6FC9D /* FriendsViewModel.swift */; };
 		020A1A182AFE9A2700C6FC9D /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A172AFE9A2700C6FC9D /* MapView.swift */; };
 		020A1A1C2AFE9A5000C6FC9D /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A1A1B2AFE9A5000C6FC9D /* MapViewModel.swift */; };
+		025B367C2B164CAA005102B8 /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 025B367B2B164CAA005102B8 /* SpotifyAPI */; };
+		025B367F2B17C40E005102B8 /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025B367E2B17C40E005102B8 /* APIConstants.swift */; };
+		025B36812B17C80C005102B8 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025B36802B17C80C005102B8 /* NetworkError.swift */; };
+		025B36832B17CB3D005102B8 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025B36822B17CB3D005102B8 /* APIService.swift */; };
 		029CFC7F2AE437E100F32BEB /* MyFindMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */; };
 		029CFC812AE437E100F32BEB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC802AE437E100F32BEB /* ContentView.swift */; };
 		029CFC832AE437E300F32BEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 029CFC822AE437E300F32BEB /* Assets.xcassets */; };
@@ -63,6 +67,10 @@
 		020A1A142AFD3EAC00C6FC9D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		020A1A172AFE9A2700C6FC9D /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		020A1A1B2AFE9A5000C6FC9D /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		025B367D2B1654AF005102B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		025B367E2B17C40E005102B8 /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
+		025B36802B17C80C005102B8 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		025B36822B17CB3D005102B8 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		029CFC7B2AE437E100F32BEB /* MyFindMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFindMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		029CFC7E2AE437E100F32BEB /* MyFindMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFindMusicApp.swift; sourceTree = "<group>"; };
 		029CFC802AE437E100F32BEB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,6 +95,7 @@
 				020A19F02AFAA08100C6FC9D /* FirebaseFirestoreSwift in Frameworks */,
 				020A19DC2AFAA08100C6FC9D /* FirebaseAppCheck in Frameworks */,
 				020A19DA2AFAA08100C6FC9D /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				025B367C2B164CAA005102B8 /* SpotifyAPI in Frameworks */,
 				020A19E02AFAA08100C6FC9D /* FirebaseAuth in Frameworks */,
 				020A19E42AFAA08100C6FC9D /* FirebaseCrashlytics in Frameworks */,
 				020A1A042AFAA08100C6FC9D /* FirebaseRemoteConfigSwift in Frameworks */,
@@ -180,6 +189,7 @@
 		029CFC7D2AE437E100F32BEB /* MyFindMusic */ = {
 			isa = PBXGroup;
 			children = (
+				025B367D2B1654AF005102B8 /* Info.plist */,
 				02CE3A872AF3EE7600077201 /* App */,
 				02CE3A882AF3EE7C00077201 /* Components */,
 				02CE3A892AF3EE8200077201 /* Core */,
@@ -249,6 +259,9 @@
 			children = (
 				020A1A0A2AFAA33900C6FC9D /* ViewModel */,
 				020A1A092AFAA33200C6FC9D /* View */,
+				025B367E2B17C40E005102B8 /* APIConstants.swift */,
+				025B36802B17C80C005102B8 /* NetworkError.swift */,
+				025B36822B17CB3D005102B8 /* APIService.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -305,6 +318,7 @@
 				020A1A032AFAA08100C6FC9D /* FirebaseRemoteConfigSwift */,
 				020A1A052AFAA08100C6FC9D /* FirebaseStorage */,
 				020A1A072AFAA08100C6FC9D /* FirebaseStorageCombine-Community */,
+				025B367B2B164CAA005102B8 /* SpotifyAPI */,
 			);
 			productName = MyFindMusic;
 			productReference = 029CFC7B2AE437E100F32BEB /* MyFindMusic.app */;
@@ -336,6 +350,7 @@
 			mainGroup = 029CFC722AE437E100F32BEB;
 			packageReferences = (
 				020A19D22AFAA08100C6FC9D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				025B367A2B164CAA005102B8 /* XCRemoteSwiftPackageReference "SpotifyAPI" */,
 			);
 			productRefGroup = 029CFC7C2AE437E100F32BEB /* Products */;
 			projectDirPath = "";
@@ -370,8 +385,11 @@
 				020A1A152AFD3EAC00C6FC9D /* FriendsViewModel.swift in Sources */,
 				020A1A1C2AFE9A5000C6FC9D /* MapViewModel.swift in Sources */,
 				02CE3A912AF3F24E00077201 /* InputView.swift in Sources */,
+				025B36832B17CB3D005102B8 /* APIService.swift in Sources */,
 				029CFC812AE437E100F32BEB /* ContentView.swift in Sources */,
 				029CFC7F2AE437E100F32BEB /* MyFindMusicApp.swift in Sources */,
+				025B367F2B17C40E005102B8 /* APIConstants.swift in Sources */,
+				025B36812B17C80C005102B8 /* NetworkError.swift in Sources */,
 				020A19CF2AFA992600C6FC9D /* User.swift in Sources */,
 				020A19CB2AFA930200C6FC9D /* ProfileView.swift in Sources */,
 				020A19C92AFA903800C6FC9D /* RegistrationView.swift in Sources */,
@@ -507,6 +525,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MyFindMusic/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyFindMusic/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tracking location";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -536,6 +555,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MyFindMusic/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyFindMusic/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tracking location";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -585,6 +605,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 10.17.0;
+			};
+		};
+		025B367A2B164CAA005102B8 /* XCRemoteSwiftPackageReference "SpotifyAPI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Peter-Schorn/SpotifyAPI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -724,6 +752,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 020A19D22AFAA08100C6FC9D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		025B367B2B164CAA005102B8 /* SpotifyAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 025B367A2B164CAA005102B8 /* XCRemoteSwiftPackageReference "SpotifyAPI" */;
+			productName = SpotifyAPI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

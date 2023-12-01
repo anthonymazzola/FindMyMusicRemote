@@ -36,10 +36,15 @@ struct ProfileView: View {
                     }
                 }
                 
-                Section("General") {
-                    SettingsRowView(imageName: "gear",
-                                    title: "Version",
-                                    tintColor: Color(.systemGray))
+                Section("Spotify") {
+                                    Button {
+                                        // Trigger Spotify authentication
+                                        viewModel.authenticateWithSpotify()
+                                    } label: {
+                                        SettingsRowView(imageName: "music.note",
+                                                        title: "Log in with Spotify",
+                                                        tintColor: Color(.green))
+                                    }
                 }
                 
                 Section("Account") {
