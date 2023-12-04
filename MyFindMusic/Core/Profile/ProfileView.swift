@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @State private var topArtists: [TopArtistInfo] = []
     var body: some View {
         if let user = viewModel.currentUser {
             List {
@@ -37,14 +38,90 @@ struct ProfileView: View {
                 }
                 
                 Section("Spotify") {
-                                    Button {
-                                        // Trigger Spotify authentication
-                                        viewModel.authenticateWithSpotify()
-                                    } label: {
-                                        SettingsRowView(imageName: "music.note",
-                                                        title: "Log in with Spotify",
-                                                        tintColor: Color(.green))
-                                    }
+                    Button {
+                        // Trigger Spotify authentication
+                        viewModel.authenticateWithSpotify()
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Log in with Spotify",
+                                        tintColor: Color(.green))
+                    }
+                }
+                
+                Section("Playlist") {
+                    Button {
+
+                        Task {
+                                            await viewModel.getRecentlyPlayed { recentlyPlayed in
+
+                                                for track in recentlyPlayed {
+                                                    print("Track Name: \(track.name)")
+                                                    print("Artist: \(track.artistName)")
+                                                    print("Image URL: \(track.imageURL)")
+                                                    print("--------------------")
+                                                }
+                                            }
+                                        }
+                        
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Get user recently played",
+                                        tintColor: Color(.green))
+                    }
+                    Button {
+
+                        Task {
+                                            await viewModel.getCurrentSong { currentSong in
+
+                                                print("Track Name: \(currentSong.name)")
+                                                print("Artist: \(currentSong.artistName)")
+                                                print("Image URL: \(currentSong.imageURL)")
+                                                print("--------------------")
+                                            }
+                                        }
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Get user song",
+                                        tintColor: Color(.green))
+                    }
+                    Button {
+
+                        Task {
+                                            await viewModel.getTopTracks { topTracks in
+
+                                                for track in topTracks {
+                                                    print("Track Name: \(track.name)")
+                                                    print("Artist: \(track.artistName)")
+                                                    print("Image URL: \(track.imageURL)")
+                                                    print("--------------------")
+
+                                                }
+                                            }
+                                        }
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Get user top",
+                                        tintColor: Color(.green))
+                    }
+                    Button {
+
+                        Task {
+                            await viewModel.getTopArtists { artists in
+
+                                                    for artist in artists {
+                                                        print("Artist Name: \(artist.name)")
+                                                        print("Image URL: \(artist.imageURL)")
+                                                        print("Spotify URL: \(artist.spotifyURL)")
+                                                        print("--------------------")
+                                                    }
+                                                }
+                                        }
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Get user artists",
+                                        tintColor: Color(.green))
+                    }
+                
                 }
                 
                 Section("Account") {
@@ -65,7 +142,9 @@ struct ProfileView: View {
                     
                 }
             }
+            .onOpenURL(perform: viewModel.handleURL)
         }
+        
     }
 }
 
