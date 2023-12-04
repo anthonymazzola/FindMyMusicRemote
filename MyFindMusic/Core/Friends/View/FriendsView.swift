@@ -6,38 +6,44 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 
 struct FriendsView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @State var friendsToDisplay: [User] = []
+
 
     @State var searchText: String = ""
-    @State var friendNames: [User] = []
+//  @State var friendNames: [User] = []
+    @State var forceRefresh: Bool = false
 
     var filteredUsers: [User] {
         if searchText.isEmpty {
-            return friendNames
+            print(friendsToDisplay)
+            return friendsToDisplay
         } else {
-            return friendNames.filter { $0.fullname.lowercased().contains(searchText.lowercased()) }
+            return friendsToDisplay.filter { $0.fullname.lowercased().contains(searchText.lowercased()) }
         }}
 
 
 
-    var body: some View {
+    var body: some View{
         let user = viewModel.currentUser
 
-        VStack{
+        NavigationView{
+            VStack{
+                Text("Friends")
+                    .font(.title)
+                    .padding()
+                NavigationLink(destination: FindFriends(forceRefresh: $forceRefresh)) {
+                    Text("Find Friends")
+                }.onAppear{
+                    fetchFriendFullName(uid: user!.id)
+                    print(friendsToDisplay)
+                }
 
-            Text("Friends")
-                .font(.title)
-                .padding()
-//            TextField("Search Here", text: self.$searchText)
-//                .padding(10)
-//                .background(Color(.systemGray5))
-//                .cornerRadius(20)
-//                .padding(.horizontal, 20)
-//            Spacer()
-            NavigationStack{
                 List(filteredUsers, id: \.self) { friend in
                     NavigationLink(destination: FriendProfileView(friend: friend)) {
                         VStack(alignment: .leading, spacing: 4) {
@@ -63,34 +69,34 @@ struct FriendsView: View {
                             }
                         }
                     }
-
                 }.searchable(text: $searchText)
+
             }
-            .onAppear {
-                var toRun = fetchFriendFullName(uid: user!.friends)
-                print(user?.email)
-            }
+        }.refreshable {
+                fetchFriendFullName(uid: user!.id)
+                print(friendsToDisplay)
         }
+
     }
 
 
-            private func fetchFriendFullName(uid: [String]) -> Int {
-                friendNames.removeAll()
-                let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"])
-                Task {
-                    for thisId in uid{
+
+            private func fetchFriendFullName(uid: String) -> Void {
+
+                friendsToDisplay.removeAll()
+                let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"], latitude: 75, longitude: 76)
+                Task{
+                    let currentUser = await fetchFriend(uid: uid)
+                    for thisId in currentUser!.friends{
                         if let friend = await fetchFriend(uid: thisId) {
                             //print(friend.fullname)
-                            friendNames.append(friend)
+                            friendsToDisplay.append(friend)
                         }
                         else {
-                            friendNames.append(FAILED_USER)
+                            friendsToDisplay.append(FAILED_USER)
                         }
                     }
                 }
-                return 1
             }
-        }
-
-
+}
 
