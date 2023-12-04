@@ -16,7 +16,7 @@ import SpotifyWebAPI
 class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
-    
+
     let spotify = SpotifyAPI(
         authorizationManager: AuthorizationCodeFlowManager(
             clientId: "7e6bd487f6084279982cbff6fc6865fc", clientSecret: "22b470637932483f9a99d5dfd3a8c276"
@@ -24,9 +24,9 @@ class AuthViewModel: ObservableObject {
     )
     
     var globalAccessToken: String?
-    
+
     var cancellables: Set<AnyCancellable> = []
-    
+
     init() {
         self.userSession = Auth.auth().currentUser
         
@@ -49,7 +49,7 @@ class AuthViewModel: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["friends"], latitude: 73, longitude: 44)
+            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["friends"], latitude: 0, longitude: 0)
             let encodedUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
             await fetchUser()
@@ -57,7 +57,7 @@ class AuthViewModel: ObservableObject {
             print("DEBUG: Failed to create user with error \(error.localizedDescription)")
         }
     }
-    
+
     func signOut() {
         do {
             try Auth.auth().signOut()
@@ -67,22 +67,33 @@ class AuthViewModel: ObservableObject {
             print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
         }
     }
-    
+
     func deleteAccount() {
         Auth.auth().currentUser?.delete()
         self.userSession = nil
         self.currentUser = nil
     }
-    
+
     func fetchUser() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
+
         guard let snapshot = try? await Firestore.firestore().collection("users").document(uid).getDocument() else { return }
         self.currentUser = try? snapshot.data(as: User.self)
-        
+
         print("DEBUG: Current user is \(self.currentUser)")
     }
-    
+
+    func pushToFirebaseLatLong(user: User, latitude: Double, longitude: Double) async {
+        if let user = await fetchFriend(uid: user.id) {
+            do {
+                try await Firestore.firestore().collection("users").document(user.id).updateData(["latitude" : latitude])
+                try await Firestore.firestore().collection("users").document(user.id).updateData(["longitude" : longitude])
+            } catch {
+                print("DEBUG: Failed to push data to Firebase \(error.localizedDescription)")
+            }
+        }
+    }
+
     func authenticateWithSpotify() {
         let authorizationURL = spotify.authorizationManager.makeAuthorizationURL(
             redirectURI: URL(string: "myfindmusic://spotify-login-callback")!,
@@ -101,7 +112,7 @@ class AuthViewModel: ObservableObject {
 
         UIApplication.shared.open(authorizationURL)
     }
-    
+
     func handleURL(_ url: URL) {
         spotify.authorizationManager.requestAccessAndRefreshTokens(
             redirectURIWithQuery: url
@@ -122,9 +133,9 @@ class AuthViewModel: ObservableObject {
             print("Access Token: \(self.globalAccessToken ?? "N/A")")
         })
         .store(in: &cancellables)
-        
+
     }
-    
+
     func getRecentlyPlayed(completion: @escaping ([RecentlyPlayed]) -> Void) {
         let url = URL(string: "https://api.spotify.com/v1/me/player/recently-played?limit=5")!
 
@@ -167,7 +178,7 @@ class AuthViewModel: ObservableObject {
 
         task.resume()
     }
-    
+
     func getCurrentSong(completion: @escaping (CurrentPlayback) -> Void) {
         let url = URL(string: "https://api.spotify.com/v1/me/player/currently-playing")!
 
@@ -205,7 +216,7 @@ class AuthViewModel: ObservableObject {
 
         task.resume()
     }
-    
+
     func getTopTracks(completion: @escaping ([TopTracks]) -> Void) {
         let url = URL(string: "https://api.spotify.com/v1/me/top/tracks?limit=5")!
 
@@ -247,7 +258,7 @@ class AuthViewModel: ObservableObject {
 
         task.resume()
     }
-    
+
     func getTopArtists(completion: @escaping ([TopArtistInfo]) -> Void) {
         let url = URL(string: "https://api.spotify.com/v1/me/top/artists?limit=5")!
 
@@ -261,7 +272,7 @@ class AuthViewModel: ObservableObject {
                 print("Error: \(error)")
                 return
             }
-            
+
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 if let data = data {
                     do {

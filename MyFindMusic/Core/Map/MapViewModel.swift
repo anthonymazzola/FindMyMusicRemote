@@ -16,6 +16,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private var centerOnStart = true
     private var firstRun = true
 
+    @EnvironmentObject var viewModel: AuthViewModel
+
+    @Published var userCoordinates: [MapAnnotationItem] = []
+    @Published var currentUserCoord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+
     @Published var region = MKCoordinateRegion(
         center: .init(latitude: 37.334_900, longitude: -122.009_020),
         span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -56,6 +61,25 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
         guard shouldCenterOnLocation else { return }
 
+//        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+//            // Push user coordinates to firebase
+//            DispatchQueue.main.async {
+//                if let user = self.viewModel.currentUser {
+//                    let latitude: Double = (locations.first?.coordinate.latitude)!
+//                    let longitude: Double = (locations.first?.coordinate.longitude)!
+//                    Task {
+//                        await self.viewModel.pushToFirebase(user: self.viewModel.currentUser!, latitude: latitude, longitude: longitude)
+//                        print("Pushing to firebase")
+//                    }
+//                }
+//            }
+//
+//        }
+        let latitude: Double = (locations.first?.coordinate.latitude)!
+        let longitude: Double = (locations.first?.coordinate.longitude)!
+        currentUserCoord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+
+
         if (centerOnStart) {
             // Unwrap latest location optionl
             guard let lastestLocation = locations.first else {
@@ -79,42 +103,38 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         shouldCenterOnLocation = true
         guard let lastestLocation = locationManager.location else {
             // error handle
-            print("Error")
+            print("Error getting location")
             return
         }
         // set that coordinate to be the center of self.region
         self.region.center = lastestLocation.coordinate
     }
 
-//    func gettingFriendCoordinates(user: User, userCoordinates: [MapAnnotationItem]) {
-//        if (firstRun) {
-//            var _ = fetchAllUsersCoordinates(uid: user.friends, userCoordinates: userCoordinates)
-//            firstRun = false
-//        } else {
-//            var timer = Timer.scheduledTimer(timeInterval: 10.0,
-//                                               target: self,
-//                                               selector: Selector(fetchAllUsersCoordinates(uid: user.friends, userCoordinates: userCoordinates)),
-//                                               userInfo: nil,
-//                                               repeats: true)
-//        }
-//    }
+    func gettingFriendCoordinates(user: User) {
+        var _ = fetchAllUsersCoordinates(uid: user.friends)
+    }
 
-//    private func fetchAllUsersCoordinates(uid: [String], userCoordinates: inout [MapAnnotationItem]) -> String {
-//        userCoordinates.removeAll()
-//        let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"], latitude: 0, longitude: 0)
-//        var mapAnn: MapAnnotationItem = MapAnnotationItem(id: FAILED_USER.id, coordinate: CLLocationCoordinate2D(latitude: FAILED_USER.latitude, longitude: FAILED_USER.longitude))
-//        Task {
-//            for thisId in uid{
-//                if let friend = await fetchFriend(uid: thisId) {
-//                    //print(friend.fullname)
-//                    mapAnn = MapAnnotationItem(id: friend.id, coordinate: CLLocationCoordinate2D(latitude: friend.latitude, longitude: friend.longitude))
-//                    userCoordinates.append(mapAnn)
-//                }
-//                else {
-//                    userCoordinates.append(mapAnn)
-//                }
-//            }
-//        }
-//        return ""
-//    }
+    func pushCurrentUserCoordinates(currentUser: User) {
+        Task {
+            let latitude: Double = currentUserCoord.latitude
+            let longitude: Double = currentUserCoord.longitude
+            await self.viewModel.pushToFirebaseLatLong(user: currentUser, latitude: latitude, longitude: longitude)
+        }
+    }
+
+    func fetchAllUsersCoordinates(uid: [String]) -> String {
+        userCoordinates.removeAll()
+        let FAILED_USER = User(id: NSUUID().uuidString, fullname: "Cannot Load", email: "Cannot load", friends: ["Cannot Load"], latitude: 0, longitude: 0)
+        Task {
+            for thisId in uid{
+                if let friend = await fetchFriend(uid: thisId) {
+                    userCoordinates.append(MapAnnotationItem(id: friend.id, coordinate: CLLocationCoordinate2D(latitude: friend.latitude, longitude: friend.longitude), userInitials: friend.initials))
+                }
+                else {
+                    userCoordinates.append(MapAnnotationItem(id: FAILED_USER.id, coordinate: CLLocationCoordinate2D(latitude: FAILED_USER.latitude, longitude: FAILED_USER.longitude), userInitials: FAILED_USER.initials))
+                }
+            }
+        }
+        return ""
+    }
 }
