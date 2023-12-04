@@ -12,6 +12,8 @@ struct User: Identifiable, Codable, Hashable {
     let fullname: String
     let email: String
     let friends: [String]
+    var latitude: Double
+    var longitude: Double
 
     var initials: String {
         let formatter = PersonNameComponentsFormatter()
