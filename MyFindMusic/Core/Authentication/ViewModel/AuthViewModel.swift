@@ -44,7 +44,7 @@ class AuthViewModel: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["friends"], latitude: 73, longitude: 44)
+            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["friends"], latitude: 0, longitude: 0)
             let encodedUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
             await fetchUser()
@@ -79,6 +79,16 @@ class AuthViewModel: ObservableObject {
         print("DEBUG: Current user is \(self.currentUser)")
     }
 
+    func pushToFirebaseLatLong(user: User, latitude: Double, longitude: Double) async {
+        if let user = await fetchFriend(uid: user.id) {
+            do {
+                try await Firestore.firestore().collection("users").document(user.id).updateData(["latitude" : latitude])
+                try await Firestore.firestore().collection("users").document(user.id).updateData(["longitude" : longitude])
+            } catch {
+                print("DEBUG: Failed to push data to Firebase \(error.localizedDescription)")
+            }
+        }
+    }
     
     func authenticateWithSpotify() {
         // Initialize SpotifyAPI with your client ID and client secret

@@ -11,31 +11,30 @@ import _MapKit_SwiftUI
 struct MapAnnotationItem: Identifiable {
         var id: String
         var coordinate: CLLocationCoordinate2D
+        var userInitials: String
 }
 
 struct MapView: View {
     @ObservedObject var manager: LocationManager
 
-    var coordinates: [[String: Int]] = [[:]]
+    var mapFix: [[String: Int]] = [[:]]
 
     @EnvironmentObject var viewModel: AuthViewModel
     @State var size : CGFloat = UIScreen.main.bounds.height - 260
+
+    let timer = Timer.publish(every: 30.0, on: .main, in: .common).autoconnect()
     let startPos: CGFloat = 195
 
-    @State var userCoordinates: [MapAnnotationItem] = []
 
-    var timer = Timer()
+//    @State var userCoordinates: [MapAnnotationItem] = []
 
     var body: some View {
         if let user = viewModel.currentUser {
 
+            var userCoordinates = manager.userCoordinates
+            let currentUserCoord = manager.currentUserCoord
+            let userCoordinatesCopy = userCoordinates
 
-//            Timer.publish(every: 10, on: .main, in: .common)
-//                    .autoconnect()
-//                    .onReceive(timer) { _ in
-//                        var _ = fetchAllUsersCoordinates(uid: user.friends)
-//                    }
-//            var _ = fetchAllUsersCoordinates(uid: user.friends)
             NavigationView{
 
                 ZStack(alignment: .topTrailing) {
@@ -51,21 +50,82 @@ struct MapView: View {
     //                }
 
 
+                    // Works in displaying multiple things gets tricky when its users bc updates too fast
+                    // Need to way to update userCoordinates every 10 seconds
+//                    Map(coordinateRegion: $manager.region, showsUserLocation: true, annotationItems: userCoordinates) { userLocation in
+//                        MapAnnotation(coordinate: userLocation.coordinate) {
+////                            Image(systemName: "person.crop.circle.fill")
+//                            UserInitialsView(userId: userLocation.id)
+//                        }
+//                    }
+//                    .onReceive(timer) { _ in
+//                        Task {
+//    //                        let _ = manager.pushCurrentUserCoordinates(currentUser: user)
+//                            let latitude: Double = currentUserCoord.latitude
+//                            let longitude: Double = currentUserCoord.longitude
+//                            await self.viewModel.pushToFirebase(user: user, latitude: latitude, longitude: longitude)
+//                            print("currentUserCoordinates: ", user.latitude, user.longitude)
+//                            let _ = manager.fetchAllUsersCoordinates(uid: user.friends)
+//                            print("userCoordinates: ", userCoordinates)
+//                        }
+//                    }
                     Map(coordinateRegion: $manager.region, showsUserLocation: true, annotationItems: userCoordinates) { userLocation in
                         MapAnnotation(coordinate: userLocation.coordinate) {
-                            Image(systemName: "person.crop.circle.fill")
+                            UserInitialsView(userId: userLocation.id, initials: userLocation.userInitials)
+                        }
+                    }
+                    .onReceive(timer) { _ in
+                        Task {
+                            userCoordinates = userCoordinatesCopy
+                            let latitude: Double = currentUserCoord.latitude
+                            let longitude: Double = currentUserCoord.longitude
+                            await self.viewModel.pushToFirebaseLatLong(user: user, latitude: latitude, longitude: longitude)
+                            print("currentUserCoordinates: ", user.latitude, user.longitude)
+                            let _ = manager.fetchAllUsersCoordinates(uid: user.friends)
+                            print("userCoordinates: ", userCoordinates)
+                        }
+                    }
+                    .onAppear(){
+                        Task {
+                            userCoordinates = userCoordinatesCopy
+                            let latitude: Double = currentUserCoord.latitude
+                            let longitude: Double = currentUserCoord.longitude
+                            await self.viewModel.pushToFirebaseLatLong(user: user, latitude: latitude, longitude: longitude)
+                            print("currentUserCoordinates: ", user.latitude, user.longitude)
+                            let _ = manager.fetchAllUsersCoordinates(uid: user.friends)
+                            print("userCoordinates: ", userCoordinates)
                         }
                     }
 
-    //                Map(coordinateRegion: $manager.region,
-    //                    showsUserLocation: true)
-    //                            .edgesIgnoringSafeArea(.all)
+//                    .onAppear(perform: {
+//                        let _ = manager.gettingFriendCoordinates(user: user)
+//                        Task {
+//                            await viewModel.pushToFirebase(user: user, latitude: user.latitude, longitude: user.longitude)
+//                            print("User info ", user, user.latitude, user.longitude)
+//                        }
+//                    })
+
+                    // Og way to display just one user
+//                    Map(coordinateRegion: $manager.region,
+//                        showsUserLocation: true)
+//                    .edgesIgnoringSafeArea(.all).onAppear(perform: {
+//                        let _ = manager.gettingFriendCoordinates(user: user)
+//                        Task {
+//                            await viewModel.pushToFirebase(user: user, latitude: user.latitude, longitude: user.longitude)
+//                            print("Pushing to firebase")
+//                        }
+//                    })
+
+
 
                     Button(action: {
                         // Center the map
                         manager.requestLocationForButton()
-                        print("userCoordinates")
-                        print(userCoordinates)
+//                        let _ = manager.gettingFriendCoordinates(user: user)
+//                        Task {
+//                            await viewModel.pushToFirebase(user: user, latitude: 122.49494, longitude: 34.303048)
+//                            print("Pushing to firebase")
+//                        }
                     }) {
                         Image(systemName: "location.square")
                             .imageScale(.large)
@@ -142,25 +202,6 @@ struct MapView: View {
 //        }
 //        return ""
 //    }
-
 } // MpaView
 
-//#Preview {
-//    var locationManager: LocationManager
-//    MapView(manager: locationManager)
-//}
-
-
-
-
-//                LocationButton(.currentLocation) {
-//                  // Fetch location with Core Location.
-//                    print("buton press region \($manager.region.center)")
-//                    manager.requestLocationForButton()
-//                }
-//                .symbolVariant(.fill)
-//                .labelStyle(.iconOnly)
-//                .foregroundColor(.white)
-//                .cornerRadius(8)
-//                .padding()
 
