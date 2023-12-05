@@ -459,5 +459,45 @@ class AuthViewModel: ObservableObject {
             return nil
         }
     }
+
+     func setRecentSongsAndCurrentSongFirebase(userId: String) async {
+            let uid = userId
+            Task {
+                // Recently played
+                await self.getRecentlyPlayed { recentlyPlayed in
+
+                    let db = Firestore.firestore()
+
+                    let data: [String: Any] = [
+                        "recentlyPlayed": recentlyPlayed.map { track in
+                            return [
+                                "trackName": track.name,
+                                "artistName": track.artistName,
+                                "imageURL": track.imageURL
+                            ]
+                        }
+                    ]
+                    db.collection("users").document(uid).updateData(data)
+                }
+
+                // Current song
+                await self.getCurrentSong { currentSong in
+
+                    let db = Firestore.firestore()
+
+                    let data: [String: Any] = [
+                        "currentSong": [
+                            "trackName": currentSong.name,
+                            "artistName": currentSong.artistName,
+                            "imageURL": currentSong.imageURL
+                        ]
+                    ]
+                    db.collection("users").document(uid).updateData(data)
+                }
+            }
+
+
+
+        }
     
 }

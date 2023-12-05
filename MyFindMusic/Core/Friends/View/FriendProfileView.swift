@@ -27,8 +27,6 @@ struct FindFriends: View {
         VStack() {
             Text("Add Frends")
                 .font(.title)
-
-
             Text("Add friend by unique id")
             HStack{
                 TextField("Find Freind", text: $searchText)
@@ -47,27 +45,18 @@ struct FindFriends: View {
         }
     }
 
-
 struct FriendProfileView: View {
     var friend: User
     let nameFont = Font.system(size: 30, weight: .semibold, design: .default)
-
-
-
-
-    struct SpotifyStuff: Hashable{
-        var albumURL: String
-        var songTitle = "Going up the Coast"
-        var artist = "Clay and Friends"
-    }
-
-    var ss = SpotifyStuff(albumURL:"https://www.aimm.edu/hubfs/Blog%20Images/Top%2010%20Album%20Covers%20of%202017/Tyler%20the%20Creator-%20Flower%20boy.jpg")
-    var ss2 = SpotifyStuff(albumURL: "https://www.udiscovermusic.com/wp-content/uploads/2017/08/Pink-Floyd-Dark-Side-Of-The-Moon.jpg")
-    var ss3 = SpotifyStuff(albumURL: "https://www.highsnobiety.com/static-assets/dato/1682522194-best-album-covers-time-031.jpg")
-    var ss4 = SpotifyStuff(albumURL: "https://i0.wp.com/909originals.com/wp-content/uploads/2019/01/DaftPunk_HomeworkLP.jpg?fit=1500%2C1500&ssl=1")
+    @State var songName: String = ""
+    @State var songUrl: String = ""
+    @State var artistName: String = ""
+    @State private var recentlyPlayed: [RecentlyPlayed] = []
+    @State private var topTracks: [TopTracks] = []
+    @State private var topArtists: [TopArtistInfo] = []
+    @State var refresh = false
 
     var body: some View {
-        var lst = [ss, ss2, ss3, ss4]
         List {
             Section {
                 HStack {
@@ -75,47 +64,194 @@ struct FriendProfileView: View {
                         .font(.title)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                        .frame(width: 72, height: 72)
+                        .frame(width: 90, height: 90)
                         .background(Color(.systemGray3))
                         .clipShape(Circle())
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(friend.fullname)
                             .font(nameFont)
-
                     }
-
+                    .onAppear {
+                        Task {
+                            do {
+                                let currentSong = try await fetchCurrentSong()
+                                if let currentSong = currentSong {
+                                    songName = currentSong.name
+                                    artistName = currentSong.artistName
+                                    songUrl = currentSong.imageURL
+                                } else {
+                                    print("Failed to fetch currentSong.")
+                                }
+                            } catch {
+                                print("Error fetching currentSong: \(error)")
+                            }
+                        }
+                    }
                 }
-                Text("Songs of the day")
-                ForEach(lst, id: \.self) { song in
-                    HStack{
+
+                Text("Current Song")
+                    .fontWeight(.semibold)
+                HStack {
+                    AsyncImage(
+                        url: URL(string: songUrl),
+                        content: { image in
+                            image.resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: 400, maxHeight: 400)
+                        },
+                        placeholder: {
+                            ProgressView()
+                        }
+                    )
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(songName)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .padding(.top, 4)
+
+                        Text(artistName)
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+
+            Section {
+                Text("Recently played")
+                    .fontWeight(.semibold)
+                ForEach(recentlyPlayed, id: \.name) { track in
+                    HStack {
                         AsyncImage(
-                            url: URL(string: song.albumURL),
+                            url: URL(string: track.imageURL),
                             content: { image in
                                 image.resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(maxWidth: 300, maxHeight: 100)
+                                    .frame(maxWidth: 50, maxHeight: 50)
                             },
                             placeholder: {
                                 ProgressView()
-                            })
+                            }
+                        )
+
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(song.songTitle)
+                            Text(track.name)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .padding(.top, 4)
 
-                            Text(song.artist)
+                            Text(track.artistName)
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                         }
+                    }
+                }
+            }
+            Section {
+                Text("Top tracks")
+                    .fontWeight(.semibold)
+                ForEach(topTracks, id: \.name) { track in
+                    HStack {
+                        AsyncImage(
+                            url: URL(string: track.imageURL),
+                            content: { image in
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: 50, maxHeight: 50)
+                            },
+                            placeholder: {
+                                ProgressView()
+                            }
+                        )
 
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(track.name)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .padding(.top, 4)
+
+                            Text(track.artistName)
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+            }
+            Section {
+                Text("Top Artists")
+                    .fontWeight(.semibold)
+                ForEach(topArtists, id: \.name) { track in
+                    HStack {
+                        AsyncImage(
+                            url: URL(string: track.imageURL),
+                            content: { image in
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: 50, maxHeight: 50)
+                                    .clipShape(Circle())
+                            },
+                            placeholder: {
+                                ProgressView()
+                            }
+                        )
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(track.name)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .padding(.top, 4)
+
+                            Text("")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
             }
         }
+        .onAppear {
+            Task {
+                do {
+                    let recentlyPlayed = try await fetchRecentlyPlayed(userID: friend.id)
+                    if let recentlyPlayed = recentlyPlayed {
+                        self.recentlyPlayed = recentlyPlayed
+                    } else {
+                        print("Failed to fetch recentlyPlayed.")
+                    }
+                } catch {
+                    print("Error fetching recentlyPlayed: \(error)")
+                }
+                do {
+                    let topTracks = try await fetchTopTracks(userID: friend.id)
+                    if let topTracks = topTracks {
+                        self.topTracks = topTracks
+                    } else {
+                        print("Failed to fetch topTracks.")
+                    }
+                } catch {
+                    print("Error fetching topTracks: \(error)")
+                }
+                do {
+                    let topArtists = try await fetchTopArtists(userID: friend.id)
+                    if let topArtists = topArtists {
+                        self.topArtists = topArtists
+                    } else {
+                        print("Failed to fetch topTracks.")
+                    }
+                } catch {
+                    print("Error fetching topTracks: \(error)")
+                }
+            }
+        }
+        .refreshable{
+            refresh.toggle()
+        }
     }
 }
+
+
+
 
 
 

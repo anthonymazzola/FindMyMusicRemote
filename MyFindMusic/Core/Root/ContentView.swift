@@ -38,12 +38,12 @@ struct ContentView: View {
                             Text("Profile")
                         }
                 }.toolbarBackground(.visible, for: .tabBar)
-                .toolbarBackground(.white, for: .tabBar)
+                    .toolbarBackground(Color(.systemGray6), for: .tabBar)
             }
                     else{
                         LoginView()
                     }
-        }
+        }.preferredColorScheme(.dark)
 
 //            Group {
 //                if viewModel.userSession != nil {
