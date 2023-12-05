@@ -26,7 +26,7 @@ struct UserInitialsView: View {
                 .foregroundColor(.white)
                 .fontWeight(.bold)
             if (isTapped) {
-                TapOnMapView(isTapped: $isTapped)
+                TapOnMapView(isTapped: $isTapped, userId: userId)
             }
         } // ZStack
     } // body
@@ -35,6 +35,7 @@ struct UserInitialsView: View {
 struct TapOnMapView: View {
 
     @Binding var isTapped: Bool
+    var userId: String
 
     @State private var songOffset: CGFloat = -40
     @State private var artisitOffset: CGFloat = -40
@@ -51,22 +52,47 @@ struct TapOnMapView: View {
     let leftSideShift: CGFloat = 2.5
     let rightSideShift: CGFloat = 2.3
 
-    var body: some View {
-        let songTitle: String = cleanSongTitle(songTitle: "Oklahoma Smokeshow More")
-        let songTitleSize: Int = songTitle.count
+    @State var songName: String = "James"
+    @State var songNameSize: Int = 0
+    @State var artistName: String = "Elijah"
+    @State var artistNameSize: Int = 0
+    @State var imgUrl: String = "Anthony"
 
-        let artistName: String = cleanSongTitle(songTitle: "Zach Bryan")
-        let artistNameSize: Int = artistName.count
+    var body: some View {
+
         ZStack {
             Rectangle()
                 .fill(Color.gray)
                 .frame(width: rectangleWidth, height: rectangleHeight)
                 .cornerRadius(10.0)
+                .onAppear(){
+                    Task {
+                        do {
+                            let currentSong = try await fetchCurrentSong(userId: userId)
+                            if let currentSong = currentSong {
+                                // Handle the currentSong data
+                                songName = cleanSongTitle(songTitle: currentSong.name)
+                                songNameSize = songName.count
+
+                                artistName = cleanSongTitle(songTitle: currentSong.artistName)
+                                artistNameSize = artistName.count
+
+                                imgUrl = currentSong.imageURL
+
+                            } else {
+                                print("Failed to fetch currentSong.")
+                            }
+                        } catch {
+                            print("Error fetching currentSong: \(error)")
+                        }
+                    } // Task
+                } // onAppear
+
 
             VStack(spacing: 5) {
 
                 AsyncImage(
-                    url: URL(string: "https://i1.sndcdn.com/artworks-SFgkPMdenXap-0-t500x500.jpg"),
+                    url: URL(string: imgUrl),
                     content: { image in
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
@@ -80,39 +106,36 @@ struct TapOnMapView: View {
                 .clipShape(Rectangle())
                 .cornerRadius(5.0)
 
-                Text(songTitle)
+                Text(songName)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
                     .lineLimit(1)
                     .offset(x: songOffset)
-                    .animation(songTitleSize > animationThreshold ? .linear(duration: 5).repeatForever() : nil, value: songOffset)
+                    .animation(songNameSize > animationThreshold ? .linear(duration: 5).repeatForever() : nil, value: songOffset)
                     .onAppear {
-                        if (songTitleSize > animationThreshold) {
-                            songOffset = -(CGFloat(songTitleSize) * leftSideShift)
+
+                        if (songNameSize > animationThreshold) {
+                            songOffset = -(CGFloat(songNameSize) * leftSideShift)
                         } else {
-                            print("else")
                             songOffset = 0
                         }
                     } // onAppear
                     .onChange(of: songOffset) { newValue  in
-                        print("On Change")
                         if (songOffset == 0) {
                             songOffset = 0
                         } else if (newValue < rectangleWidth){
                             // Restart from the right when it goes out of the left border
                             DispatchQueue.main.async {
-                                songOffset = CGFloat(songTitleSize) * rightSideShift
+                                songOffset = CGFloat(songNameSize) * rightSideShift
                             }
                         } else {
                             DispatchQueue.main.async {
-                                songOffset = -(CGFloat(songTitleSize) * leftSideShift)
+                                songOffset = -(CGFloat(songNameSize) * leftSideShift)
                             }
                         }
                     } // onChange
                     .mask(Rectangle().frame(width: rectangleWidth, height: rectangleHeight))
-
-
 
                 Text(artistName)
                     .font(.footnote)
@@ -122,7 +145,7 @@ struct TapOnMapView: View {
                     .animation(artistNameSize > animationThresholdArtist ? .linear(duration: 5).repeatForever() : nil, value: artisitOffset)
                     .onAppear {
                         if (artistNameSize > animationThresholdArtist) {
-                            artisitOffset = -(CGFloat(songTitleSize) * leftSideShift)
+                            artisitOffset = -(CGFloat(artistNameSize) * leftSideShift)
                         } else {
                             artisitOffset = 0
                         }
@@ -142,7 +165,6 @@ struct TapOnMapView: View {
                         }
                     } // onChange
                     .mask(Rectangle().frame(width: rectangleWidth, height: rectangleHeight))
-
             }
             .padding()
         } // ZStack
@@ -151,16 +173,4 @@ struct TapOnMapView: View {
             isTapped = false
         } // onTapGesture
     } // body
-
-    func cleanSongTitle(songTitle: String) -> String {
-        var cleanSongTitle: String = ""
-        var dirtySongTitle: String = songTitle
-        if (songTitle.count >= 21) {
-            for _ in 0..<21 {
-                cleanSongTitle += String(dirtySongTitle.removeFirst())
-            }
-            return cleanSongTitle + "..."
-        }
-        return dirtySongTitle
-    }
 } // View

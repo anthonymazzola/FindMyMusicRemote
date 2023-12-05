@@ -44,13 +44,16 @@ struct MapView: View {
                     }
                     .onReceive(timer) { _ in
                         Task {
+                            // Update user coordinates, push to firebase
                             userCoordinates = userCoordinatesCopy
                             let latitude: Double = currentUserCoord.latitude
                             let longitude: Double = currentUserCoord.longitude
                             await self.viewModel.pushToFirebaseLatLong(user: user, latitude: latitude, longitude: longitude)
-                            print("currentUserCoordinates: ", user.latitude, user.longitude)
                             let _ = manager.fetchAllUsersCoordinates(uid: user.friends)
-                            print("userCoordinates: ", userCoordinates)
+
+                            // Get recently played from spotify
+                            await self.viewModel.setRecentSongsAndCurrentSongFirebase(userId: user.id)
+
                         }
                     }
                     .onAppear(){
@@ -59,9 +62,10 @@ struct MapView: View {
                             let latitude: Double = currentUserCoord.latitude
                             let longitude: Double = currentUserCoord.longitude
                             await self.viewModel.pushToFirebaseLatLong(user: user, latitude: latitude, longitude: longitude)
-                            print("currentUserCoordinates: ", user.latitude, user.longitude)
                             let _ = manager.fetchAllUsersCoordinates(uid: user.friends)
-                            print("userCoordinates: ", userCoordinates)
+
+                            // Get recently played from spotify
+                            await self.viewModel.setRecentSongsAndCurrentSongFirebase(userId: user.id)
                         }
                     }
 
@@ -69,9 +73,11 @@ struct MapView: View {
                         // Center the map
                         manager.requestLocationForButton()
                     }) {
-                        Image(systemName: "location.square")
+                        Image(systemName: "location.square.fill")
                             .imageScale(.large)
                             .font(.system(size: 30))
+                            .foregroundStyle(.white)
+                            .padding(.top, 20)
                     }
 
                     // Pull up menu
@@ -84,7 +90,6 @@ struct MapView: View {
                         )
                     )
                     .foregroundStyle(Color(.systemGray3), Color(.white))
-                    .background(.gray)
                     .padding(.bottom, 15)
                     .offset(y: size)
                     .gesture(DragGesture()
@@ -93,7 +98,6 @@ struct MapView: View {
                         }) // onChanged
                     ).animation(.spring())
                 } // ZStack
-
             } // NavigationView
         } else {
             Text("Loading...")
