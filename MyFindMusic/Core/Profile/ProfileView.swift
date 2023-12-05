@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+
     var body: some View {
         if let user = viewModel.currentUser {
             List {
@@ -37,14 +41,22 @@ struct ProfileView: View {
                 }
                 
                 Section("Spotify") {
-                                    Button {
-                                        // Trigger Spotify authentication
-                                        viewModel.authenticateWithSpotify()
-                                    } label: {
-                                        SettingsRowView(imageName: "music.note",
-                                                        title: "Log in with Spotify",
-                                                        tintColor: Color(.green))
-                                    }
+                    Button {
+                        // Trigger Spotify authentication
+                        viewModel.authenticateWithSpotify()
+                    } label: {
+                        SettingsRowView(imageName: "music.note",
+                                        title: "Log in with Spotify",
+                                        tintColor: Color(.green))
+                    }
+                }
+                
+                Section("View Account") {
+                    Button {
+                        print("View what your profile looks like")
+                    } label: {
+                        SettingsRowView(imageName: "house", title: "View Yourself", tintColor: Color(.magenta))
+                    }
                 }
                 
                 Section("Account") {
@@ -65,7 +77,9 @@ struct ProfileView: View {
                     
                 }
             }
+            .onOpenURL(perform: viewModel.handleURL)
         }
+        
     }
 }
 
