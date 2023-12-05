@@ -49,7 +49,7 @@ class AuthViewModel: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["friends"], latitude: 0, longitude: 0)
+            let user = User(id: result.user.uid, fullname: fullname, email: email, friends: ["QPeqnrvvjMPYexrfHDIbrwlHZmt1"], latitude: 44, longitude: 73)
             let encodedUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
             await fetchUser()
@@ -66,12 +66,6 @@ class AuthViewModel: ObservableObject {
         } catch {
             print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
         }
-    }
-    
-    func deleteAccount() {
-        Auth.auth().currentUser?.delete()
-        self.userSession = nil
-        self.currentUser = nil
     }
     
     func fetchUser() async {
@@ -178,18 +172,16 @@ class AuthViewModel: ObservableObject {
                     }
                 }
                 Task {
-                    await self.getTopArtists { topArtists in
+                    await self.getTopTracks { topTracks in
                         
                         let db = Firestore.firestore()
                         
                         let data: [String: Any] = [
-                            "topArtists": topArtists.map { artist in
+                            "topTracks": topTracks.map { track in
                                 return [
-                                    "trackName": artist.name,
-                                    
-                                    "imageURL": artist.imageURL,
-                                    "spotifyURL": artist.spotifyURL
-                                    
+                                    "trackName": track.name,
+                                    "artistName": track.artistName,
+                                    "imageURL": track.imageURL
                                 ]
                             }
                         ]
@@ -270,23 +262,29 @@ class AuthViewModel: ObservableObject {
                 return
             }
             
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                if let data = data {
-                    do {
-                        let decoder = JSONDecoder()
-                        let currentlyPlaying = try decoder.decode(CurrentlyPlaying.self, from: data)
-                        
-                        let trackName = currentlyPlaying.item.name
-                        let artistName = currentlyPlaying.item.artists.first?.name ?? "Unknown Artist"
-                        let imageURL = currentlyPlaying.item.album.images.first?.url ?? ""
-                        
-                        let currentSongInfo = CurrentPlayback(name: trackName, artistName: artistName, imageURL: imageURL)
-                        completion(currentSongInfo)
-                    } catch {
-                        print("Error decoding JSON: \(error)")
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    if let data = data {
+                        do {
+                            let decoder = JSONDecoder()
+                            let currentlyPlaying = try decoder.decode(CurrentlyPlaying.self, from: data)
+                            
+                            let trackName = currentlyPlaying.item.name
+                            let artistName = currentlyPlaying.item.artists.first?.name ?? "Unknown Artist"
+                            let imageURL = currentlyPlaying.item.album.images.first?.url ?? ""
+                            
+                            let currentSongInfo = CurrentPlayback(name: trackName, artistName: artistName, imageURL: imageURL)
+                            completion(currentSongInfo)
+                        } catch {
+                            print("Error decoding JSON: \(error)")
+                        }
                     }
                 }
-            } else {
+                else if httpResponse.statusCode == 204 {
+                    completion(CurrentPlayback(name: "No Song Playing", artistName: "N/A", imageURL: "https://i.scdn.co/image/ab67616d0000b273e19b1b51cdd35051e17cf6dc"))
+                }
+            }
+            else {
                 print("Error: Unexpected response \(response.debugDescription)")
             }
         }
@@ -403,7 +401,7 @@ class AuthViewModel: ObservableObject {
             var topTracks: [TopTracks] = []
                     
             for trackData in topTracksData {
-                guard let trackName = trackData["name"] as? String,
+                guard let trackName = trackData["trackName"] as? String,
                       let artistName = trackData["artistName"] as? String,
                       let imageURL = trackData["imageURL"] as? String else {
                     continue

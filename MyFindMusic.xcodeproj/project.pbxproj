@@ -57,6 +57,7 @@
 		029CFC812AE437E100F32BEB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029CFC802AE437E100F32BEB /* ContentView.swift */; };
 		029CFC832AE437E300F32BEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 029CFC822AE437E300F32BEB /* Assets.xcassets */; };
 		029CFC862AE437E300F32BEB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 029CFC852AE437E300F32BEB /* Preview Assets.xcassets */; };
+		02BAF7E42B1EB6BD00A3BDC4 /* ProfileDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BAF7E32B1EB6BD00A3BDC4 /* ProfileDataView.swift */; };
 		02CE3A8F2AF3EFC400077201 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CE3A8E2AF3EFC400077201 /* LoginView.swift */; };
 		02CE3A912AF3F24E00077201 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CE3A902AF3F24E00077201 /* InputView.swift */; };
 /* End PBXBuildFile section */
@@ -86,6 +87,7 @@
 		029CFC802AE437E100F32BEB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		029CFC822AE437E300F32BEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		029CFC852AE437E300F32BEB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		02BAF7E32B1EB6BD00A3BDC4 /* ProfileDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataView.swift; sourceTree = "<group>"; };
 		02CE3A8E2AF3EFC400077201 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		02CE3A902AF3F24E00077201 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -285,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				020A19CA2AFA930200C6FC9D /* ProfileView.swift */,
+				02BAF7E32B1EB6BD00A3BDC4 /* ProfileDataView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				020A19CB2AFA930200C6FC9D /* ProfileView.swift in Sources */,
 				020A19C92AFA903800C6FC9D /* RegistrationView.swift in Sources */,
 				020A19CD2AFA958400C6FC9D /* SettingsRowView.swift in Sources */,
+				02BAF7E42B1EB6BD00A3BDC4 /* ProfileDataView.swift in Sources */,
 				024605DE2B1E5AE200C645B2 /* UserInitialsView.swift in Sources */,
 				024605E22B1E5B1400C645B2 /* FetchFriend.swift in Sources */,
 				020A1A0E2AFB198D00C6FC9D /* AuthViewModel.swift in Sources */,
