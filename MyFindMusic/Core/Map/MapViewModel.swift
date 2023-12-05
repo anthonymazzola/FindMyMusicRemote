@@ -44,7 +44,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         //If we don´t, we request authorization
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
-//            locationManager.requestAlwaysAuthorization()
         default:
             break
         }
@@ -53,9 +52,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         guard .authorizedWhenInUse == manager.authorizationStatus else { return }
         locationManager.requestLocation()
-
-
-
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -64,7 +60,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
-        guard shouldCenterOnLocation else {return }
+//        guard shouldCenterOnLocation else {return }
 
         let latitude: Double = (locations.first?.coordinate.latitude)!
         let longitude: Double = (locations.first?.coordinate.longitude)!
@@ -74,7 +70,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             // Unwrap latest location optionl
             guard let lastestLocation = locations.first else {
                 // error handle
-                print("Error")
+                print("Error getting location in didUpdateLocations")
                 return
             }
 
@@ -90,10 +86,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     func requestLocationForButton() {
         // Get the lastest location
-//        shouldCenterOnLocation = true
         guard let lastestLocation = locationManager.location else {
             // error handle
-            print("Error getting location")
+            print("Error getting location in requestLocationForButton")
             return
         }
         // set that coordinate to be the center of self.region
@@ -104,12 +99,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         // set that coordinate to be the center of self.region
         centerOnFriend = true
         centerOnFriendCoords = friendCoordinates
-//        self.region.center = friendCoordinates
         if (centerOnFriend) {
-//            self.region = MKCoordinateRegion(
-//                center: centerOnFriendCoords,
-//                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-//            )
             self.region.center = friendCoordinates
             centerOnFriend = false
         }
