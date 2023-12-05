@@ -8,73 +8,115 @@
 import Foundation
 
 struct SpotifyTrack: Codable {
+    struct Item: Codable {
+        struct Track: Codable {
+            let name: String
+            let artists: [Artist]
+            let album: Album
+
+            struct Artist: Codable {
+                let name: String
+            }
+
+            struct Album: Codable {
+                let images: [Image]
+
+                struct Image: Codable {
+                    let url: String
+                }
+            }
+        }
+
+        let track: Track
+    }
+
+    let items: [Item]
+}
+
+struct SpotifyTopTracks: Codable {
+    struct Item: Codable {
+        let name: String
+        let artists: [Artist]
+        let album: Album
+
+        struct Artist: Codable {
+            let name: String
+        }
+
+        struct Album: Codable {
+            let images: [Image]
+
+            struct Image: Codable {
+                let url: String
+            }
+        }
+    }
+
+    let items: [Item]
+}
+
+struct CurrentlyPlaying: Codable {
+    let item: Item
+
+    struct Item: Codable {
+        let artists: [Artist]
+        let name: String
+        let album: Album
+
+        struct Artist: Codable {
+            let name: String
+        }
+
+        struct Album: Codable {
+            let images: [Image]
+        }
+
+        struct Image: Codable {
+            let url: String
+        }
+    }
+}
+
+struct TopArtists: Codable {
+    let items: [Artist]
+
     struct Artist: Codable {
         let external_urls: ExternalURLs
-        let href: String
-        let id: String
-        let name: String
-        let type: String
-        let uri: String
-    }
-
-    struct Album: Codable {
-        let album_type: String
-        let artists: [Artist]
-        let available_markets: [String]
-        let external_urls: ExternalURLs
-        let href: String
-        let id: String
         let images: [Image]
         let name: String
-        let release_date: String
-        let release_date_precision: String
-        let total_tracks: Int
-        let type: String
-        let uri: String
-    }
 
-    struct ExternalURLs: Codable {
-        let spotify: String
-    }
+        struct ExternalURLs: Codable {
+            let spotify: String
+        }
 
-    struct Image: Codable {
-        let height: Int
-        let url: String
-        let width: Int
+        struct Image: Codable {
+            let height: Int
+            let url: String
+            let width: Int
+        }
     }
+}
 
-    let track: Track
-    let played_at: String
-    let context: Context
+struct RecentlyPlayed: Codable {
+    let name: String
+    let artistName: String
+    let imageURL: String
+}
 
-    struct Track: Codable {
-        let album: Album
-        let artists: [Artist]
-        let available_markets: [String]
-        let disc_number: Int
-        let duration_ms: Int
-        let explicit: Bool
-        let external_ids: ExternalIDs
-        let external_urls: ExternalURLs
-        let href: String
-        let id: String
-        let is_local: Bool
-        let name: String
-        let popularity: Int
-        let preview_url: String?
-        let track_number: Int
-        let type: String
-        let uri: String
-    }
+struct CurrentPlayback: Codable {
+    let name: String
+    let artistName: String
+    let imageURL: String
+}
 
-    struct Context: Codable {
-        let type: String
-        let href: String
-        let external_urls: ExternalURLs
-        let uri: String
-    }
+struct TopTracks: Codable {
+    let name: String
+    let artistName: String
+    let imageURL: String
+}
 
-    struct ExternalIDs: Codable {
-        let isrc: String
-    }
+struct TopArtistInfo: Codable {
+    let name: String
+    let imageURL: String
+    let spotifyURL: String
 }
