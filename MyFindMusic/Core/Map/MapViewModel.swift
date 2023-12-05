@@ -14,6 +14,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private let locationManager = CLLocationManager()
     private var shouldCenterOnLocation = false
     private var centerOnStart = true
+    private var centerOnFriend = false
+    private var centerOnFriendCoords: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     private var firstRun = true
 
     @EnvironmentObject var viewModel: AuthViewModel
@@ -51,6 +53,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         guard .authorizedWhenInUse == manager.authorizationStatus else { return }
         locationManager.requestLocation()
+
+
+
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -59,26 +64,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
-        guard shouldCenterOnLocation else { return }
+        guard shouldCenterOnLocation else {return }
 
-//        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
-//            // Push user coordinates to firebase
-//            DispatchQueue.main.async {
-//                if let user = self.viewModel.currentUser {
-//                    let latitude: Double = (locations.first?.coordinate.latitude)!
-//                    let longitude: Double = (locations.first?.coordinate.longitude)!
-//                    Task {
-//                        await self.viewModel.pushToFirebase(user: self.viewModel.currentUser!, latitude: latitude, longitude: longitude)
-//                        print("Pushing to firebase")
-//                    }
-//                }
-//            }
-//
-//        }
         let latitude: Double = (locations.first?.coordinate.latitude)!
         let longitude: Double = (locations.first?.coordinate.longitude)!
         currentUserCoord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-
 
         if (centerOnStart) {
             // Unwrap latest location optionl
@@ -94,13 +84,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
             )
             centerOnStart = false
-        }
 
+        }
     }
 
     func requestLocationForButton() {
         // Get the lastest location
-        shouldCenterOnLocation = true
+//        shouldCenterOnLocation = true
         guard let lastestLocation = locationManager.location else {
             // error handle
             print("Error getting location")
@@ -108,6 +98,21 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
         // set that coordinate to be the center of self.region
         self.region.center = lastestLocation.coordinate
+    }
+
+    func centerOnFriendLocation(friendCoordinates: CLLocationCoordinate2D) {
+        // set that coordinate to be the center of self.region
+        centerOnFriend = true
+        centerOnFriendCoords = friendCoordinates
+//        self.region.center = friendCoordinates
+        if (centerOnFriend) {
+//            self.region = MKCoordinateRegion(
+//                center: centerOnFriendCoords,
+//                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+//            )
+            self.region.center = friendCoordinates
+            centerOnFriend = false
+        }
     }
 
     func gettingFriendCoordinates(user: User) {
