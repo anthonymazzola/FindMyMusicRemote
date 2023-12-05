@@ -53,7 +53,7 @@ func fetchCurrentSong(userId: String) async throws -> CurrentPlayback? {
            var topTracks: [TopTracks] = []
 
            for trackData in topTracksData {
-               guard let trackName = trackData["name"] as? String,
+               guard let trackName = trackData["trackName"] as? String,
                      let artistName = trackData["artistName"] as? String,
                      let imageURL = trackData["imageURL"] as? String else {
                    continue

@@ -75,7 +75,7 @@ struct FriendProfileView: View {
                     .onAppear {
                         Task {
                             do {
-                                let currentSong = try await fetchCurrentSong()
+                                let currentSong = try await fetchCurrentSong(userId: friend.id)
                                 if let currentSong = currentSong {
                                     songName = currentSong.name
                                     artistName = currentSong.artistName
@@ -213,7 +213,7 @@ struct FriendProfileView: View {
         .onAppear {
             Task {
                 do {
-                    let recentlyPlayed = try await fetchRecentlyPlayed(userID: friend.id)
+                    let recentlyPlayed = try await fetchRecentlyPlayed(userId: friend.id)
                     if let recentlyPlayed = recentlyPlayed {
                         self.recentlyPlayed = recentlyPlayed
                     } else {
@@ -223,7 +223,7 @@ struct FriendProfileView: View {
                     print("Error fetching recentlyPlayed: \(error)")
                 }
                 do {
-                    let topTracks = try await fetchTopTracks(userID: friend.id)
+                    let topTracks = try await fetchTopTracks(userId: friend.id)
                     if let topTracks = topTracks {
                         self.topTracks = topTracks
                     } else {
@@ -233,7 +233,7 @@ struct FriendProfileView: View {
                     print("Error fetching topTracks: \(error)")
                 }
                 do {
-                    let topArtists = try await fetchTopArtists(userID: friend.id)
+                    let topArtists = try await fetchTopArtists(userId: friend.id)
                     if let topArtists = topArtists {
                         self.topArtists = topArtists
                     } else {
